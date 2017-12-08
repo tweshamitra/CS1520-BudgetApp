@@ -17,9 +17,9 @@ function makeRequest(method, target, retCode, action, data){
 
     httpRequest.onreadystatechange = makeHandler(httpRequest, retCode, action);
     httpRequest.open(method, target);
-
+    console.log("made request");
     if(data){
-        httpRequest.setRequestHeader('Content-Type', 'application/json');
+        httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         httpRequest.send(data);
     } else{
         httpRequest.send();
@@ -37,6 +37,7 @@ function makeHandler(httpRequest, retCode, action){
             }
         }
     }
+    
     return handler;
 
 }
@@ -59,15 +60,26 @@ function poller(){
 function addCategory(){
     var newCat = document.getElementById("newCategory").value;
     console.log(newCat);
+    var data;
+    data = 'name=' + newCat;
     window.clearTimeout(timeoutId);
     makeRequest("POST", "/cats", 201, poller, data);
-    document.getElementById("newCategory").value = "New Category";
 }
 
 function addListItem(){
-    // var item = 
+
 }
 function addPurchase(){ 
+    var newPurchaseName = document.getElementById("newPurchaseName").value;
+    var newPurchaseAmount = document.getElementById("newPurchaseAmount").value;
+    console.log(newPurchaseName);
+    console.log(newPurchaseAmount);
+    makeRequest("POST", "/purchases", 201, poller, data);
+    
+}
+
+function deleteCategory(categoryName){
+  makeRequest("DELETE", '/cats/' + categoryName, 204, poller);
     
 }
 window.addEventListener("load", setup, true);

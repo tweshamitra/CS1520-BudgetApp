@@ -5,6 +5,7 @@ app = Flask(__name__)
 api = Api(app)
 
 parser = reqparse.RequestParser()
+parser.add_argument('name')
 
 TOTAL_BUDGET = 2000
 
@@ -28,7 +29,7 @@ CATEGORIES= [
     },
     {
         'name':'Uncategorized',
-        'remaining':
+        
     }
 ]
 
@@ -67,26 +68,40 @@ class Category(Resource):
     def get(self):
         return CATEGORIES
 
-    def post(self, category_id, budget):
-        parser.add_argument()
+    def post(self):
+        print("here")
         args = parser.parser_args()
-        category = {''}
-        CATEGORIES[category_id] = category
-    def delete(self, category_id):
-        abort_if_category_doesnt_exist(category_id)
-        del CATEGORIES[category_id]
-        return '', 204
+        print(args)
+        # category = {'name': args['name']}
+        CATEGORIES.append(category)
+        return CATEGORIES, 201
+
+    def delete(self):
+        args = parser.parse_args()
+        categoryName = {'name' : args['name']}
+        print(categoryName)
+        for cat in categories:
+           if cat.name == categoryName:
+               del cat
+        return ' ', 204
+
+    # def delete(self, category_id):
+    #     abort_if_category_doesnt_exist(category_id)
+    #     del CATEGORIES[category_id]
+    #     return '', 204
 
 class Purchase(Resource):
     def get(self):
         return PURCHASES
 
-    def post(self):
-        args = parser.parse_args()
-        purchase_id = 
-    def delete(self, purchase_id):
+    # def post(self):
+    #     args = parser.parse_args()
+    #     purchase_id = 
+    # def delete(self, purchase_id):
 
-api.add_resource(Category, '/cats')
+api.add_resource(Category, '/cats', '/cats/<name>')
+
+
 api.add_resource(Purchase, '/purchases/')
 
 if __name__ == '__main__':
