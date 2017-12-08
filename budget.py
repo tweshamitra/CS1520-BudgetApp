@@ -3,56 +3,72 @@ from flask_restful import reqparse, abort, Api, Resource
 
 app = Flask(__name__)
 api = Api(app)
+app.config.update(dict(SEND_FILE_MAX_AGE_DEFAULT=0))
 
 parser = reqparse.RequestParser()
 parser.add_argument('name')
-
+parser.add_argument('budget', type = int)
+parser.add_argument('remaining', type = int)
 TOTAL_BUDGET = 2000
 
 CATEGORIES= [
-    {
+    {   
+        'id' : 1,
         'name': 'Food',
+        'budget': 200,
         'remaining': 200,
       
     }, 
     {
+        'id': 2,
         'name':'Entertainment',
+        'budget':200,
         'remaining': 200,
     },
     {
+        'id': 3,
         'name':'Rent',
+        'budget': 1000,
         'remaining':1000,
     },
-    {
+    {   
+        'id' : 4,
         'name':'Gas',
+        'budget': 100,
         'remaining':100,
     },
-    {
+    {   
+        'id' : 5,
         'name':'Uncategorized',
+        'budget':100
         
     }
 ]
 
 PURCHASES=[
     {
+        'id' : 1,
         'category':'Food',
         'name': 'Chipotle',
         'spent': 10,
         'date': '11/30/17'
     },
     {
+        'id' : 2,
         'category':'Entertainment',
         'name':'Netflix',
         'spent':9,
         'date':'12/06/17'
     },
-    {
+    {   
+        'id' : 3,
         'category':'Gas',
         'name':'gas',
         'spent':20,
         'date':'12/07/17'
     },
     {
+        'id' : 4,
         'category':'Rent', 
         'name':'November rent',
         'spent':1000,
@@ -70,26 +86,17 @@ class Category(Resource):
 
     def post(self):
         print("here")
-        args = parser.parser_args()
+        args = parser.parse_args()
+        # category_id = int(max(CATEGORIES.keys()).lstrip('')) + 1
         print(args)
-        # category = {'name': args['name']}
-        CATEGORIES.append(category)
+        # CATEGORIES.append(category)
         return CATEGORIES, 201
 
-    def delete(self):
-        args = parser.parse_args()
-        categoryName = {'name' : args['name']}
-        print(categoryName)
-        for cat in categories:
-           if cat.name == categoryName:
-               del cat
+    def delete(self, category_id):
+        del CATEGORIES[category_id]
         return ' ', 204
-
-    # def delete(self, category_id):
-    #     abort_if_category_doesnt_exist(category_id)
-    #     del CATEGORIES[category_id]
-    #     return '', 204
-
+   
+   
 class Purchase(Resource):
     def get(self):
         return PURCHASES
@@ -99,7 +106,7 @@ class Purchase(Resource):
     #     purchase_id = 
     # def delete(self, purchase_id):
 
-api.add_resource(Category, '/cats', '/cats/<name>')
+api.add_resource(Category, '/cats', '/cats/<int:category_id>')
 
 
 api.add_resource(Purchase, '/purchases/')

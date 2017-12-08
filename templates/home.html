@@ -6,20 +6,18 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     </head>
     <body>
-        <div class = "container">
-        <h1>Budget Application</h1>
+        <div class = "container-fluid">
+        <h1>Budget Application</h1><br/>
                 
         <div class = "row">
-        <div class = "col col-lg-2">
-        {% for cat in categories %}
-        <h4 id = "categoryToDelete" value = "{{cat.name}}">{{cat.name}} : {{cat.remaining}}/{{cat.budget}}</h4>
-        <button id = "deleteCat" value = "{{cat.name}}" onclick = "deleteCategory('{{cat.name}}')" >Delete Category</button>
-            {% endfor %}  
-        </div>
+        <div id ="budget-info" class = "col col-lg-2">
+        <table id = "budgetTable"></table>
+        </div> 
         <div class = "col col-lg-2">   
         <h2>Add Category:</h2>
         <form name ="category-form">
-            <input type = "text" id = "newCategory" name = "" value = ""/>
+            Category name:      <input type = "text" id = "newCategory" name = "" value = ""/><br/><br/>
+            Allot a budget for this category:     <input type = "text" id = "newCategoryBudget" name = "" value = ""/><br/><br/>
             <input type = "button" id = "catButton" value = "Add">
         </form><br/>
         </div>
