@@ -8,7 +8,8 @@
     <body>
         <div class = "container-fluid">
         <h1>Budget Application</h1><br/>
-                
+        <h2>Your current budget for this month: ${{monthly_budget}}<br/><br/>
+        Categories:<br/></h2>
         <div class = "row">
         <div id ="budget-info" class = "col col-lg-2">
         <table id = "budgetTable"></table>
@@ -23,12 +24,8 @@
         </div>
         <div class = "col col-lg-2">               
         <h2>Add Purchase:</h2>
-        <form name = "purchase-form">
-            Category: <select name = "purchase_cats">           
-                {% for cat in categories %}
-                <option id = 'purchaseCat' value = '{{cat.name}}'>{{cat.name}}</option>
-                {% endfor %}
-            </select>
+        <form name = "purchase-form" >
+            Category: <input type = "text" id = "purchaseCat" value = ""/><br/></br/>
             Purchase: <input type = "text" id = "newPurchaseName" name = "" value = ""/><br/><br/>
             Amount spent: <input type = "text" id ="newPurchaseAmount" name = "" value= ""/><br/><br/>
             Date: <input type = "date" id = "datePurchased"><br/><br/>

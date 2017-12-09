@@ -1,6 +1,5 @@
 var timeoutID;
 var timeout = 10000;
-var repop = 0;
 
 function setup() {
     document.getElementById("catButton").addEventListener("click", addCategory, true);
@@ -18,7 +17,6 @@ function makeRequest(method, target, retCode, action, data){
 
     httpRequest.onreadystatechange = makeHandler(httpRequest, retCode, action);
     httpRequest.open(method, target);
-    console.log("made request");
     if(data){
         httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         httpRequest.send(data);
@@ -44,10 +42,11 @@ function makeHandler(httpRequest, retCode, action){
 }
 
 function repopulate(responseText){
+    console.log(responseText);
     var br = document.createElement('br');
-    console.log("repopulating");
+    // console.log("repopulating");
     var data = JSON.parse(responseText);
-    console.log(data);
+    // console.log(data);
     var table = document.getElementById("budgetTable");
     var newRow, newCell, c, category, newButton;
 
@@ -56,9 +55,10 @@ function repopulate(responseText){
     }
 
     for (c in data){
-        newRow = table.insertRow();
+        newRow = table.insertRow();    
         addCell(newRow, data[c].name);
-        addCell(newRow, data[c].remaining + "/" + data[c].budget);
+        addCell(newRow, "$" + data[c].remaining + "/" + "$"+ data[c].budget);
+        // if(data[c].budget < data[c].remaining)
         newCell = newRow.insertCell();
         newButton = document.createElement("input");
         newButton.type = "button";
@@ -68,7 +68,6 @@ function repopulate(responseText){
             newButton.addEventListener("click", function() { deleteCategory(_c); 
             }); 
         })(c);
-        console.log("repop:" +repop);
         newCell.appendChild(newButton);
     }
     timeoutId = window.setTimeout(poller, timeout);
@@ -79,7 +78,6 @@ function addCell(row, text){
     newText = document.createTextNode(text);
     newCell.appendChild(newText);
     
-   
 }
 function poller(){
     makeRequest("GET", '/cats', 200, repopulate);
@@ -87,7 +85,6 @@ function poller(){
 }
 function log(responseText){
     var data = JSON.parse(responseText);
-    console.log(data);
 }
 function addCategory(){
     var newCat = document.getElementById("newCategory").value;
@@ -99,14 +96,21 @@ function addCategory(){
     document.getElementById("newCategoryBudget").value = " ";
     
 }
-
 function addPurchase(){ 
     var newPurchaseName = document.getElementById("newPurchaseName").value;
     var newPurchaseAmount = document.getElementById("newPurchaseAmount").value;
     var category = document.getElementById("purchaseCat").value;
+    if(category == ""){
+        category = "uncategorized"
+    }
     var datePurchased = document.getElementById("datePurchased").value;
+    
     var data = "category=" + category + "&name=" + newPurchaseName + "&spent=" + newPurchaseAmount + "&date=" + datePurchased;
+
     makeRequest("POST", "/purchases/", 201, poller, data); 
+    document.getElementById("purchaseCat").value = " ";
+    document.getElementById("newPurchaseName").value = " ";
+    document.getElementById("newPurchaseAmount").value = " ";
 }
 
 function deleteCategory(category_id){

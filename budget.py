@@ -10,7 +10,8 @@ parser.add_argument('name', type = str)
 parser.add_argument('budget', type = int)
 parser.add_argument('remaining', type = int)
 
-TOTAL_BUDGET = 2000
+
+MONTHLY_BUDGET = 0
 
 CATEGORIES= [
     {   
@@ -46,6 +47,9 @@ CATEGORIES= [
     }
 ]
 
+for item in CATEGORIES:
+        MONTHLY_BUDGET = MONTHLY_BUDGET + item.get('budget')
+
 PURCHASES=[
     {
         'id' : 1,
@@ -77,23 +81,21 @@ PURCHASES=[
     }
 ]
 
+
 @app.route("/")
 def home_page():
-    return render_template("home.html", categories = CATEGORIES)
+    return render_template("home.html", categories = CATEGORIES, monthly_budget = MONTHLY_BUDGET)
 
 class Category(Resource):
     def get(self):
         return CATEGORIES
 
     def post(self):
+        category_id = len(CATEGORIES)
         args = parser.parse_args()
-        category_id = 1
-        for item in CATEGORIES:
-            if item.get('id') > category_id:
-                category_id = item.get('id')
-        category= {'name': args['name'], 'budget': args['budget'], 'remaining':args['remaining']}    
+        category= {'id': category_id + 1, 'name': args['name'], 'budget': args['budget'], 'remaining':args['remaining']}    
         CATEGORIES.append(category)
-        return CATEGORIES[category_id], 201
+        return CATEGORIES[category_id -1], 201
 
     def delete(self, category_id):
         del CATEGORIES[category_id]
@@ -111,13 +113,16 @@ class Purchase(Resource):
 
     def post(self):
         args = parser.parse_args()
-        purchase_id = 1
-        for item in PURCHASES:
-            if item.get('id') > purchase_id:
-                purchase_id = item.get('id')
-        purchase = {'category': args['category'], 'name':args['name'], 'spent':args['spent'], 'date': args['date']}
+        purchase_id = len(PURCHASES)
+        purchase = {'id': purchase_id+1,'category': args['category'], 'name':args['name'], 'spent':args['spent'], 'date': args['date']}
+        
+        for item in CATEGORIES:
+            if item.get('name').lower() == purchase.get('category').lower():
+                catBudget = item.get('budget')
+                remainingBudget = catBudget - purchase.get('spent')
+                item.update({'remaining': remainingBudget})
         PURCHASES.append(purchase)
-        return PURCHASES[purchase_id] , 201
+        return PURCHASES[purchase_id-1] , 201
 
 api.add_resource(Category, '/cats', '/cats/<int:category_id>')
 
