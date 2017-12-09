@@ -6,7 +6,7 @@ api = Api(app)
 app.config.update(dict(SEND_FILE_MAX_AGE_DEFAULT=0))
 
 parser = reqparse.RequestParser()
-parser.add_argument('name')
+parser.add_argument('name', type = str)
 parser.add_argument('budget', type = int)
 parser.add_argument('remaining', type = int)
 TOTAL_BUDGET = 2000
@@ -85,12 +85,14 @@ class Category(Resource):
         return CATEGORIES
 
     def post(self):
-        print("here")
         args = parser.parse_args()
-        # category_id = int(max(CATEGORIES.keys()).lstrip('')) + 1
-        print(args)
-        # CATEGORIES.append(category)
-        return CATEGORIES, 201
+        category_id = 1
+        for item in CATEGORIES:
+            if item.get('id') > category_id:
+                category_id = item.get('id')
+        category= {'name': args['name'], 'budget': args['budget'], 'remaining':args['remaining']}    
+        CATEGORIES.append(category)
+        return CATEGORIES[category_id], 201
 
     def delete(self, category_id):
         del CATEGORIES[category_id]

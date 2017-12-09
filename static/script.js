@@ -92,7 +92,7 @@ function log(responseText){
 function addCategory(){
     var newCat = document.getElementById("newCategory").value;
     var newCatBudget = document.getElementById("newCategoryBudget").value;
-    var data = "name=" + newCat + "," + "budget=" + newCatBudget + "," + "remaining=" + newCatBudget;
+    var data = "name=" + newCat + "&budget=" + newCatBudget  + "&remaining=" + newCatBudget;
     
     window.clearTimeout(timeoutId);
     makeRequest("POST", "/cats", 201, poller, data);
