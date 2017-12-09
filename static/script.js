@@ -83,7 +83,7 @@ function addCell(row, text){
 }
 function poller(){
     makeRequest("GET", '/cats', 200, repopulate);
-    makeRequest("GET", '/purchases',200, log);
+    makeRequest("GET", '/purchases/',200, log);
 }
 function log(responseText){
     var data = JSON.parse(responseText);
@@ -93,7 +93,6 @@ function addCategory(){
     var newCat = document.getElementById("newCategory").value;
     var newCatBudget = document.getElementById("newCategoryBudget").value;
     var data = "name=" + newCat + "&budget=" + newCatBudget  + "&remaining=" + newCatBudget;
-    
     window.clearTimeout(timeoutId);
     makeRequest("POST", "/cats", 201, poller, data);
     document.getElementById("newCategory").value = " ";
@@ -104,10 +103,10 @@ function addCategory(){
 function addPurchase(){ 
     var newPurchaseName = document.getElementById("newPurchaseName").value;
     var newPurchaseAmount = document.getElementById("newPurchaseAmount").value;
-    console.log(newPurchaseName);
-    console.log(newPurchaseAmount);
-    makeRequest("POST", "/purchases", 201, poller, data);
-    
+    var category = document.getElementById("purchaseCat").value;
+    var datePurchased = document.getElementById("datePurchased").value;
+    var data = "category=" + category + "&name=" + newPurchaseName + "&spent=" + newPurchaseAmount + "&date=" + datePurchased;
+    makeRequest("POST", "/purchases/", 201, poller, data); 
 }
 
 function deleteCategory(category_id){

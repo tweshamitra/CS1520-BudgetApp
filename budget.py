@@ -9,6 +9,7 @@ parser = reqparse.RequestParser()
 parser.add_argument('name', type = str)
 parser.add_argument('budget', type = int)
 parser.add_argument('remaining', type = int)
+
 TOTAL_BUDGET = 2000
 
 CATEGORIES= [
@@ -100,16 +101,25 @@ class Category(Resource):
    
    
 class Purchase(Resource):
+    parser.add_argument('category', type = str)
+    parser.add_argument('name', type = str)
+    parser.add_argument('spent', type = int)
+    parser.add_argument('date', type = str)
+
     def get(self):
         return PURCHASES
 
-    # def post(self):
-    #     args = parser.parse_args()
-    #     purchase_id = 
-    # def delete(self, purchase_id):
+    def post(self):
+        args = parser.parse_args()
+        purchase_id = 1
+        for item in PURCHASES:
+            if item.get('id') > purchase_id:
+                purchase_id = item.get('id')
+        purchase = {'category': args['category'], 'name':args['name'], 'spent':args['spent'], 'date': args['date']}
+        PURCHASES.append(purchase)
+        return PURCHASES[purchase_id] , 201
 
 api.add_resource(Category, '/cats', '/cats/<int:category_id>')
-
 
 api.add_resource(Purchase, '/purchases/')
 
