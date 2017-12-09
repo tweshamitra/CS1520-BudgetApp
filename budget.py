@@ -9,9 +9,13 @@ parser = reqparse.RequestParser()
 parser.add_argument('name', type = str)
 parser.add_argument('budget', type = int)
 parser.add_argument('remaining', type = int)
+parser.add_argument('category', type = str)
+parser.add_argument('name', type = str)
+parser.add_argument('spent', type = int)
+parser.add_argument('date', type = str)
 
 
-MONTHLY_BUDGET = 0
+
 
 CATEGORIES= [
     {   
@@ -47,8 +51,6 @@ CATEGORIES= [
     }
 ]
 
-for item in CATEGORIES:
-        MONTHLY_BUDGET = MONTHLY_BUDGET + item.get('budget')
 
 PURCHASES=[
     {
@@ -84,18 +86,19 @@ PURCHASES=[
 
 @app.route("/")
 def home_page():
-    return render_template("home.html", categories = CATEGORIES, monthly_budget = MONTHLY_BUDGET)
+    return render_template("home.html")
 
 class Category(Resource):
     def get(self):
         return CATEGORIES
 
     def post(self):
-        category_id = len(CATEGORIES)
+        print(CATEGORIES)
+        category_id = len(CATEGORIES)+1
         args = parser.parse_args()
-        category= {'id': category_id + 1, 'name': args['name'], 'budget': args['budget'], 'remaining':args['remaining']}    
+        category= {'id': category_id, 'name': args['name'], 'budget': args['budget'], 'remaining':args['remaining']}    
         CATEGORIES.append(category)
-        return CATEGORIES[category_id -1], 201
+        return CATEGORIES[category_id-1], 201
 
     def delete(self, category_id):
         del CATEGORIES[category_id]
@@ -103,23 +106,22 @@ class Category(Resource):
    
    
 class Purchase(Resource):
-    parser.add_argument('category', type = str)
-    parser.add_argument('name', type = str)
-    parser.add_argument('spent', type = int)
-    parser.add_argument('date', type = str)
-
+ 
     def get(self):
         return PURCHASES
 
     def post(self):
+        print(PURCHASES)
+        
         args = parser.parse_args()
-        purchase_id = len(PURCHASES)
-        purchase = {'id': purchase_id+1,'category': args['category'], 'name':args['name'], 'spent':args['spent'], 'date': args['date']}
+        purchase_id = len(PURCHASES)+1
+        print(purchase_id)
+        purchase = {'id': purchase_id,'category': args['category'], 'name':args['name'], 'spent':args['spent'], 'date': args['date']}
         
         for item in CATEGORIES:
             if item.get('name').lower() == purchase.get('category').lower():
                 catBudget = item.get('budget')
-                remainingBudget = catBudget - purchase.get('spent')
+                remainingBudget = item.get('remaining') - purchase.get('spent')
                 item.update({'remaining': remainingBudget})
         PURCHASES.append(purchase)
         return PURCHASES[purchase_id-1] , 201

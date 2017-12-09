@@ -8,12 +8,13 @@
     <body>
         <div class = "container-fluid">
         <h1>Budget Application</h1><br/>
-        <h2>Your current budget for this month: ${{monthly_budget}}<br/><br/>
-        Categories:<br/></h2>
+        
         <div class = "row">
-        <div id ="budget-info" class = "col col-lg-2">
-        <table id = "budgetTable"></table>
-        </div> 
+        
+        <div class ="col col-lg-2">
+            <div id = "monthly-budget"></div>
+
+            <br/><h2>Categories:<br/></h2><table id = "budgetTable"></table></div>
         <div class = "col col-lg-2">   
         <h2>Add Category:</h2>
         <form name ="category-form">
@@ -25,8 +26,8 @@
         <div class = "col col-lg-2">               
         <h2>Add Purchase:</h2>
         <form name = "purchase-form" >
-            Category: <input type = "text" id = "purchaseCat" value = ""/><br/></br/>
-            Purchase: <input type = "text" id = "newPurchaseName" name = "" value = ""/><br/><br/>
+            Category: <input type = "text" id = "purchaseCat"/><br/></br/>
+            Purchase: <input type = "text" id = "newPurchaseName"/><br/><br/>
             Amount spent: <input type = "text" id ="newPurchaseAmount" name = "" value= ""/><br/><br/>
             Date: <input type = "date" id = "datePurchased"><br/><br/>
             <input type = "button" id = "purchaseButton" value = "Add">
