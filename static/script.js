@@ -117,7 +117,9 @@ function addPurchase(){
     var newPurchaseAmount = document.getElementById("newPurchaseAmount").value;
     var category = document.getElementById("purchaseCat").value;
     var datePurchased = document.getElementById("datePurchased").value;
-    
+    if(category == ""){
+        category = "Uncategorized";
+    }
     var data = "category=" + category + "&name=" + newPurchaseName + "&spent=" + newPurchaseAmount + "&date=" + datePurchased;
     window.clearTimeout(timeoutId);
     makeRequest("POST", "/purchases/", 201, poller, data); 

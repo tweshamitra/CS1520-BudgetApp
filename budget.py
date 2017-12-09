@@ -121,6 +121,8 @@ class Purchase(Resource):
         for item in CATEGORIES:
             if item.get('name').lower() == purchase.get('category').lower():
                 catBudget = item.get('budget')
+                if item.get('remaining') is None:
+                    item.update({'remaining': catBudget})
                 remainingBudget = item.get('remaining') - purchase.get('spent')
                 item.update({'remaining': remainingBudget})
         PURCHASES.append(purchase)
