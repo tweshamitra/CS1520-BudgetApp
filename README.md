@@ -1,12 +1,7 @@
-# money-on-my-mind-on-my-rest-api-tweshamitra
+A budget application that uses REST to access budget categories and purchases.
+
 
 Twesha Mitra
-
-twm17
-
-Twesha Mitra
-
-twm17
 
 How to run application:
 1. start up a virtual environment
